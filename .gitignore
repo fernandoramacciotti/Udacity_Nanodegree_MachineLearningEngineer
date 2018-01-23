@@ -56,3 +56,5 @@ docs/_build/
 
 # PyBuilder
 target/
+
+projects/boston_housing/\.ipynb_checkpoints/
