@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>student_intervention_PT</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>student_intervention_PT</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 <style type="text/css">
@@ -11,8 +13,8 @@
 *
 */
 /*!
- * Bootstrap v3.3.7 (http://getbootstrap.com)
- * Copyright 2011-2016 Twitter, Inc.
+ * Bootstrap v3.3.6 (http://getbootstrap.com)
+ * Copyright 2011-2015 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
@@ -1107,6 +1109,7 @@ a:focus {
   text-decoration: underline;
 }
 a:focus {
+  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -2535,6 +2538,7 @@ select[size] {
 input[type="file"]:focus,
 input[type="radio"]:focus,
 input[type="checkbox"]:focus {
+  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -3025,6 +3029,7 @@ select[multiple].input-lg {
 .btn.focus,
 .btn:active.focus,
 .btn.active.focus {
+  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -8755,9 +8760,6 @@ body > #header .header-bar {
     margin-left: 10px;
   }
 }
-[dir="rtl"] #ipython_notebook {
-  float: right !important;
-}
 #noscript {
   width: auto;
   padding-top: 16px;
@@ -8960,14 +8962,8 @@ span#login_widget > .button .badge,
  *
  * Author: Jupyter Development Team
  */
-[dir="rtl"] #tabs li {
-  float: right;
-}
 ul#tabs {
   margin-bottom: 4px;
-}
-[dir="rtl"] ul#tabs {
-  margin-right: 0px;
 }
 ul#tabs a {
   padding-top: 6px;
@@ -8990,16 +8986,6 @@ ul.breadcrumb span {
 }
 .list_toolbar .tree-buttons {
   padding-top: 1px;
-}
-[dir="rtl"] .list_toolbar .tree-buttons {
-  float: left !important;
-}
-[dir="rtl"] .list_toolbar .pull-right {
-  padding-top: 1px;
-  float: left !important;
-}
-[dir="rtl"] .list_toolbar .pull-left {
-  float: right !important;
 }
 .dynamic-buttons {
   padding-top: 3px;
@@ -9136,9 +9122,6 @@ ul.breadcrumb span {
 #tree-selector {
   padding-right: 0px;
 }
-[dir="rtl"] #tree-selector a {
-  float: right;
-}
 #button-select-all {
   min-width: 50px;
 }
@@ -9228,9 +9211,6 @@ ul#new-menu {
   left: auto;
   right: 0;
 }
-[dir="rtl"] #new-menu {
-  text-align: right;
-}
 .kernel-menu-icon {
   padding-right: 12px;
   width: 24px;
@@ -9275,9 +9255,6 @@ ul#new-menu {
 }
 #running .panel-group .panel .panel-body .list_container .list_item:last-child {
   border-bottom: 0px;
-}
-[dir="rtl"] #running .col-sm-8 {
-  float: right !important;
 }
 .delete-button {
   display: none;
@@ -9574,7 +9551,6 @@ div.cell.selected.jupyter-soft-selected {
   }
 }
 div.inner_cell {
-  min-width: 0;
   /* Old browsers */
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -9595,6 +9571,11 @@ div.inner_cell {
   box-flex: 1;
   /* Modern browsers */
   flex: 1;
+}
+@-moz-document url-prefix() {
+  div.inner_cell {
+    overflow-x: hidden;
+  }
 }
 /* input_area and input_prompt must match in top border and margin for alignment */
 div.input_area {
@@ -11265,7 +11246,7 @@ div#pager .ui-resizable-handle::after {
 }
 .shortcut_key {
   display: inline-block;
-  width: 21ex;
+  width: 20ex;
   text-align: right;
   font-family: monospace;
 }
@@ -11577,7 +11558,6 @@ ul.typeahead-list > li > a {
   box-shadow: 0px 0px 12px 1px rgba(87, 87, 87, 0.2);
 }
 .terminal-app .terminal {
-  width: 100%;
   float: left;
   font-family: monospace;
   color: white;
@@ -11591,9 +11571,6 @@ ul.typeahead-list > li > a {
 .terminal-app .terminal dummy-screen {
   line-height: 1em;
   font-size: 14px;
-}
-.terminal-app .terminal .xterm-rows {
-  padding: 10px;
 }
 .terminal-app .terminal-cursor {
   color: black;
@@ -11654,10 +11631,8 @@ ul.typeahead-list > li > a {
 .highlight .mh { color: #666666 } /* Literal.Number.Hex */
 .highlight .mi { color: #666666 } /* Literal.Number.Integer */
 .highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
 .highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
 .highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
 .highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
 .highlight .s2 { color: #BA2121 } /* Literal.String.Double */
 .highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
@@ -11668,11 +11643,9 @@ ul.typeahead-list > li > a {
 .highlight .s1 { color: #BA2121 } /* Literal.String.Single */
 .highlight .ss { color: #19177C } /* Literal.String.Symbol */
 .highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
 .highlight .vc { color: #19177C } /* Name.Variable.Class */
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
     </style>
 <style type="text/css">
@@ -11853,9 +11826,7 @@ Este é um problema de classificação, pois devemos prever se o estudante preci
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Os dados dos estudantes foram lidos com êxito!
 </pre>
@@ -11900,9 +11871,7 @@ Este é um problema de classificação, pois devemos prever se o estudante preci
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[2]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[2]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -12119,9 +12088,7 @@ Este é um problema de classificação, pois devemos prever se o estudante preci
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Número total de estudantes: 395
 Número de atributos: 30
@@ -12190,9 +12157,7 @@ Taxa de graduação: 67.09%
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Colunas de atributos:
 [&#39;school&#39;, &#39;sex&#39;, &#39;age&#39;, &#39;address&#39;, &#39;famsize&#39;, &#39;Pstatus&#39;, &#39;Medu&#39;, &#39;Fedu&#39;, &#39;Mjob&#39;, &#39;Fjob&#39;, &#39;reason&#39;, &#39;guardian&#39;, &#39;traveltime&#39;, &#39;studytime&#39;, &#39;failures&#39;, &#39;schoolsup&#39;, &#39;famsup&#39;, &#39;paid&#39;, &#39;activities&#39;, &#39;nursery&#39;, &#39;higher&#39;, &#39;internet&#39;, &#39;romantic&#39;, &#39;famrel&#39;, &#39;freetime&#39;, &#39;goout&#39;, &#39;Dalc&#39;, &#39;Walc&#39;, &#39;health&#39;, &#39;absences&#39;]
@@ -12283,9 +12248,7 @@ Feature values:
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Processed feature columns (48 total features):
 [&#39;school_GP&#39;, &#39;school_MS&#39;, &#39;sex_F&#39;, &#39;sex_M&#39;, &#39;age&#39;, &#39;address_R&#39;, &#39;address_U&#39;, &#39;famsize_GT3&#39;, &#39;famsize_LE3&#39;, &#39;Pstatus_A&#39;, &#39;Pstatus_T&#39;, &#39;Medu&#39;, &#39;Fedu&#39;, &#39;Mjob_at_home&#39;, &#39;Mjob_health&#39;, &#39;Mjob_other&#39;, &#39;Mjob_services&#39;, &#39;Mjob_teacher&#39;, &#39;Fjob_at_home&#39;, &#39;Fjob_health&#39;, &#39;Fjob_other&#39;, &#39;Fjob_services&#39;, &#39;Fjob_teacher&#39;, &#39;reason_course&#39;, &#39;reason_home&#39;, &#39;reason_other&#39;, &#39;reason_reputation&#39;, &#39;guardian_father&#39;, &#39;guardian_mother&#39;, &#39;guardian_other&#39;, &#39;traveltime&#39;, &#39;studytime&#39;, &#39;failures&#39;, &#39;schoolsup&#39;, &#39;famsup&#39;, &#39;paid&#39;, &#39;activities&#39;, &#39;nursery&#39;, &#39;higher&#39;, &#39;internet&#39;, &#39;romantic&#39;, &#39;famrel&#39;, &#39;freetime&#39;, &#39;goout&#39;, &#39;Dalc&#39;, &#39;Walc&#39;, &#39;health&#39;, &#39;absences&#39;]
@@ -12345,9 +12308,7 @@ Feature values:
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>O conjunto de treinamento tem 300 amostras.
 O conjunto de teste tem 95 amostras.
@@ -12472,7 +12433,7 @@ O conjunto de teste tem 95 amostras.
     <span class="sd">&#39;&#39;&#39; Treina e faz estimativas utilizando um classificador baseado na pontuação do F1. &#39;&#39;&#39;</span>
     
     <span class="c1"># Indica o tamanho do classificador e do conjunto de treinamento</span>
-    <span class="k">print</span> <span class="s2">&quot;Treinando um {} com {} pontos de treinamento. . .&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">))</span>
+    <span class="k">print</span> <span class="s2">&quot;Treinando um {} com {} pontos de treinamento. . .&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">))</span>
     
     <span class="c1"># Treina o classificador</span>
     <span class="n">train_classifier</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
@@ -12576,9 +12537,7 @@ O conjunto de teste tem 95 amostras.
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>---
 1. Logistic Regression
@@ -12846,6 +12805,7 @@ Pontuação F1 para o conjunto de teste: 0.7945.
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Resposta: </strong> O modelo escolhido leva em consideração todas as variáveis que coletamos de cada aluno e com base nos dados históricos eles nos retorna a probabilidade de um dado aluno se graduar ou não. Podemos definir em conjunto uma probabilidade de corte para atuação ativa e uma faixa para observação de alunos.</p>
 <p>Para que o modelo preveja casos futuros, é importante que continuemos a recolher os mesmos dados que temos hoje, tanto socioeconômicos, quanto das faltas. Assim, basta mantermos a base atualizada e o modelo nos dará a probabilidade do aluno em questão se formar ou não e, então, podemos agir.</p>
+<p>Apenas para conhecimento e melhor entendimento do modelo, vamos supor que a estimativa seja feita somente com uma variável: Número de Faltas - e é claro que se o aluno em questão se formou ou não. O que o modelo faz é, com base nesse histórico, estimar quanto, na média, cada falta contribui para as variáveis contribuem para aumentar (ou diminuir) a probabilidade de graduação. Por exemplo, vamos supor que, dado o histórico, o modelo estimou que cada falta reduz em 2% a probabilidade de graduação. Além disso, temos um ponto de partida, que é a média geral de gradução - vamos supor 80%. Então, sem informação nenhum podemos chutar que um aluno médio tem 80% de chance de se formar, mas se ele tiver acumulado 10 faltas, então essa probabilidade cai para 60% (80% - 2% x 10 faltas). O nosso modelo calcula essa média e deopis estima o efeito na graduação para cada uma das nossas variáveis. O resultado final é a soma dos efeitos de todas as variáveis - algumas contribuem positivamente e outras negativamente.</p>
 
 </div>
 </div>
@@ -12919,9 +12879,7 @@ Pontuação F1 para o conjunto de teste: 0.7945.
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>C:\Anaconda3\envs\py27\lib\site-packages\sklearn\cross_validation.py:44: DeprecationWarning: This module was deprecated in version 0.18 in favor of the model_selection module into which all the refactored classes and functions are moved. Also note that the interface of the new CV iterators are different from that of this module. This module will be removed in 0.20.
   &#34;This module will be removed in 0.20.&#34;, DeprecationWarning)
@@ -12931,9 +12889,7 @@ C:\Anaconda3\envs\py27\lib\site-packages\sklearn\grid_search.py:43: DeprecationW
 </div>
 </div>
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Os parametros escolhidos foram LogisticRegression(C=0.1, class_weight=None, dual=False, fit_intercept=&#39;True&#39;,
           intercept_scaling=1, max_iter=100, multi_class=&#39;ovr&#39;, n_jobs=1,
@@ -12986,8 +12942,4 @@ O modelo calibrado tem F1 de 0.7917 no conjunto de teste.
     </div>
   </div>
 </body>
-
- 
-
-
 </html>
