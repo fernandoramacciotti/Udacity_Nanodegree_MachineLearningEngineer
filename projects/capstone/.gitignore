@@ -1,0 +1,4 @@
+*pycache*
+*.zip
+*.ipynb_checkpoints*
+*/old*
