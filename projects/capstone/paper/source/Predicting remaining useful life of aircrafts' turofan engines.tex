@@ -1,0 +1,275 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2345678901234567890123456789012345678901234567890123456789012345678901234567890
+%        1         2         3         4         5         6         7         8
+
+\documentclass[letterpaper, 10 pt, conference, onecolumn]{ieeeconf}  % Comment this line out
+                                                          % if you need a4paper
+%\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4
+                                                          % paper
+
+\IEEEoverridecommandlockouts                              % This command is only
+                                                          % needed if you want to
+                                                          % use the \thanks command
+\overrideIEEEmargins
+% See the \addtolength command later in the file to balance the column lengths
+% on the last page of the document
+
+
+
+% The following packages can be found on http:\\www.ctan.org
+\usepackage{graphics} % for pdf, bitmapped graphics files
+\usepackage{epsfig} % for postscript graphics files
+\usepackage{mathptmx} % assumes new font selection scheme installed
+\usepackage{times} % assumes new font selection scheme installed
+\usepackage{amsmath} % assumes amsmath package installed
+\usepackage{amssymb}  % assumes amsmath package installed
+%\usepackage{cleveref}
+\usepackage{tabularx}
+\usepackage{adjustbox}
+\usepackage{hyperref}
+
+\hypersetup{
+    %pagebackref=true,
+	pdftitle={Predicting remaining useful life of aircrafts' turofan engines}, 
+	pdfauthor={Fernando Martinelli Ramacciotti},
+	%pdfkeywords={abnt}{latex}{abntex}{abntex2}{trabalho acadêmico}, 
+	colorlinks=true,       		% false: boxed links; true: colored links
+    linkcolor=blue,          	% color of internal links
+    citecolor=black,        		% color of links to bibliography
+    %filecolor=magenta,      		% color of file links
+	urlcolor=blue,
+	bookmarksdepth=4
+}
+
+\title{\LARGE \bf
+Predicting remaining useful life of aircrafts' turofan engines}
+
+%\author{ \parbox{3 in}{\centering Huibert Kwakernaak*
+%         \thanks{*Use the $\backslash$thanks command to put information here}\\
+%         Faculty of Electrical Engineering, Mathematics and Computer Science\\
+%         University of Twente\\
+%         7500 AE Enschede, The Netherlands\\
+%         {\tt\small h.kwakernaak@autsubmit.com}}
+%         \hspace*{ 0.5 in}
+%         \parbox{3 in}{ \centering Pradeep Misra**
+%         \thanks{**The footnote marks may be inserted manually}\\
+%        Department of Electrical Engineering \\
+%         Wright State University\\
+%         Dayton, OH 45435, USA\\
+%         {\tt\small pmisra@cs.wright.edu}}
+%}
+
+\author{Fernando Martinelli Ramacciotti \\ 
+fernandoramacciotti@gmail.com% <-this % stops a space
+}
+
+
+\begin{document}
+
+
+
+\maketitle
+\thispagestyle{plain}
+\pagestyle{plain}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+
+\textbf{
+This electronic document is a template. The various components of your paper [title, text, heads, etc.] are already defined on the style sheet, as illustrated by the portions given in this document.
+}
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+Companies are always interested in cost reduction opportunities, since it may enables greater profits. Traditionally, companies schedule maintenance of their assets on a regular basis and then assess the need for replacement or fixing. In short, companies rely on corrective maintenance and actions are only taken when the asset is already degraded or failed. Predictive Maintenance, thus, aims to accurately provide remaining useful life (RUL) of assets so that businesses can prepare in advance when such asset comes to fail. Such prepared action can be replacement, maintenance, money borrowing and any other strategy that will minimize the loss of the to be faulty asset in question. 
+
+In this study, we used data-driven methods to evaluate RUL predictions, such as statistical and machine learning models. Such approaches rely less on domain knowledge and more on statistical patterns of the data in hand. Surely, statistical models combined with experts' inputs usually generates great results.
+
+In order to have a good data-driven model, one must have quality data - and this is the bottleneck of such approach. Good data for predictive maintenance means that we have enough run-to-failure data from multiple assets so that our model can extract patterns. However, such data is costly to collect, once companies would lose money to run their machines to failure, even though they would be able to build a model to prevent it in the future. Luckily, NASA made available a simulated run-to-failure dataset for a fleet of turbofan engines \cite{frederick2007user, saxena2008damage}, originally used in Prognostics and Health Management competition of 2008 (PHM'08). Since then, the dataset have been extensively used for benchmarking data-driven models that predict RUL. A thorough review can be found in \cite{ramasso2014review, ramasso2014performance}. Other approaches can be found in \cite{gugulothu2017predicting, hu2012ensemble, mosallam2014data, sarkar2011data}, including winning models from the very same competition \cite{heimes2008recurrent, wang2008similarity}.
+
+There are four datasets, that differ on operational conditions and fault modes. In this study we used the most complex one: 248 train and 249 units (or engines), with six different operational conditions and two fault modes, alongside with noisy measurements. Each sample is considered a cycle and we have the sensor measurements. All training units were simulated-to-failure, while the test series are cut off sometime before failure. Our target function, therefore, is to predict the implicit RUL. We assume that after each cycle the RUL is reduced by one unit - therefore if a train unit has 200 samples, then the last point has RUL zero and the first sample a RUL of 200.
+
+The key to a good model here is to preprocess the data. A raw plot of sensor data shows no clear trends over time and intermittent value shifts. A careful deep-dive revealed that such jumps were due to changes in operational condition, i.e. for each operational condition the sensors operates at different levels. We have, therefore, clustered the series into 6 cluster using k-means algorithm and standardized the series to zero mean and unit variance per cluster - and removed features that were constant within at least one cluster. It was interesting to notice that some sensors drift upwards when the engine fails, others downwards, while others do not show clear patterns. In addition, we have created features to cumulative count how many cycles each operational condition was set at any given time.
+
+We have used two types of learning algorithms: regression and classification. Regression models continuously estimate RUL while for classification the problem statement would be \textit{is the RUL less than an arbritrary value, e.g. 20?} or \textit{will the engine fail at some time for the next upcoming 20 cycles?}. For regression we used Linear Regression as a baseline model and compared with two more complex machine learning approaches: Random Forest and Gradient Boosting regressors. For classification, we were interesting in predict if an engine has less than 20 RUL. We used Logistic Regression as baseline and, again, compared against Random Forest and Gradient Boosting (now as classifiers). We divided our training set into 5 different folds for cross-validation. Gradient Boosting and Random Forest, for regression and classification, respectively, performed better, i.e., had greater mean cross-validated scores - Mean Squared Error for regression and $F_1$ Score for classification. Such models were fine tuned, again cross-validation scoring, varying hyperparameters. All models were developed in Python.
+
+The best mean cross-validation training score for the regression model scored an MSE of $2,745$ and test MSE of $4,781$. After postprocessing the prediction with Kalman filter \cite{h2oai}, the test scored improved by 2\%, down to $4,699$. Still, both training and test scores of the benchmark model, Linear Regression, were worse than the selected model.
+
+The best mean cross-validation training score for the classification model scored an $F_1$ score of $0.83$ and test MSE of $0.52$. rSurp,singlyi the benchmark model, Logistic Regression, performed better on test set, with a $F_1$ test score of $0.55$, even if a worse training score than the selected model.
+
+In short, our models performed well on training set, but, even though we have used cross-validation folds to avoid overfitting, it seems that they could not generalize well, since the test results were much worse. Perhaps a more thorough preprocessing improves model performance, with a more careful signal processing to remove noise. A custom cost function for model optimization could also be tested, penalizing RUL overestimation more, since it is more critical (i.e. late predicting is more critical than early). In fact, the loss function used in the original competition was asymmetrical to account such preference  \cite{saxena2008damage}. Moreover, different target function could be tested, treating RUL more as a health index - the motivation is because the sensors operates at a fairly constant range within each operational mode while the engine is healthy and only deviates when unhealthy.
+
+This paper is organized as follows: \autoref{sec:data} introduces and describes the dataset; \autoref{sec:preprocess} outlines the data preprocessing steps; \autoref{sec:modeling} depicts the models used; \autoref{sec:model-selection} describes the evaluation criteria to model selection; \autoref{sec:postprocess} presents the postprocessing step experimented on regression outputs; \autoref{sec:results} discusses the results; and final remarks are in \autoref{sec:conclusion}.
+
+%%%%%% ---------------------------
+
+\section{Data}\label{sec:data}
+The dataset used is from NASA's repository: Turbofan Engine Degradation Simulation Data Set. The data is described as follows:
+
+\textit{"Data sets consists of multiple multivariate time series. Each data set is further divided into training and test subsets. Each time series is from a different engine, i.e., the data can be considered to be from a fleet of engines of the same type. Each engine starts with different degrees of initial wear and manufacturing variation which is unknown to the user. This wear and variation is considered normal, i.e., it is not considered a fault condition. There are three operational settings that have a substantial effect on engine performance. These settings are also included in the data. The data is contaminated with sensor noise.}
+
+\textit{"The engine is operating normally at the start of each time series, and develops a fault at some point during the series. In the training set, the fault grows in magnitude until system failure. In the test set, the time series ends some time prior to system failure. The objective of the competition is to predict the number of remaining operational cycles before failure in the test set, i.e., the number of operational cycles after the last cycle that the engine will continue to operate. Also provided a vector of true Remaining Useful Life values for the test data.}
+
+\textit{"The data are provided as a zip-compressed text file with 26 columns of numbers, separated by spaces. 
+Each row is a snapshot of data taken during a single operational cycle, each column is a different variable."}\footnote{\url{https://ti.arc.nasa.gov/tech/dash/groups/pcoe/prognostic-data-repository}}
+
+The columns correspond to:
+\begin{itemize}
+\item unit number;
+\item time, in cycles;
+\item operational settings (3 columns);
+\item sensor measurements (21 columns).
+\end{itemize}
+
+More details about the simulation and damage propagation modeling can be found in \cite{saxena2008damage}. It is worth noticing that such data was used in the PHM'08, the Prognostics and Health Management competition of 2008, where participants were challenged to create algorithms to predict RUL.
+
+We have four different files:
+
+\begin{itemize}
+\item FD001: 100 train samples and 100 test samples, one operational condition and one fault mode;
+\item FD002: 260 train samples and 259 test samples, six operational conditions and one fault mode;
+\item FD003: 100 train samples and 100 test samples, one operational condition and two fault modes;
+\item FD004: 249 train samples and 248 test samples, six operational conditions and two fault modes;
+\end{itemize}
+
+The dataset used in this study is the \textit{FD004}. A quick look at how our target variable, RUL, is distributed, depicted in \autoref{fig:rul-distribution}, reveals a right skewed distribution. In \autoref{tab:rul-train-summary} the reader can find the variable statistical descriptions.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{plots/eda_rul_distribution.png}
+    \caption{Training RUL distribution}
+    \label{fig:rul-distribution}
+\end{figure}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{l|c}
+        \hline 
+        \hline \\[-1.8ex] 
+        Statistic & Value \\
+        \hline \\[-1.8ex] 
+         N & 249 \\
+         Mean & 244.98 \\
+         Std. Dev. & 73.11 \\
+         Min & 127 \\
+         Max & 542 \\
+         \hline
+         \hline
+    \end{tabular}
+    \caption{Train RUL summary}
+    \label{tab:rul-train-summary}
+\end{table}
+
+%%%%%% ---------------------------
+
+\section{Preprocessing}\label{sec:preprocess}
+Raw sensor data plotting reveals no clear patterns and insights about how each sensor trends over time until failure, as depicted in \autoref{fig:sensors-raw}. A visual inspection of the three operational settings variables indicates in [FIGURA OP SETTINGS] six different regions were samples agglomerate, which is expected given the six different operational regimes the engines can run. Back again to the raw sensor plotting over time, the intermittent behavior of the sensors measurement could be different operational regimes at each cycle - i.e., each operational mode shifts the operating range of each sensor and the operational conditions can be distinct at each cycle. Such hypothesis is supported by plots in \autoref{fig:rul-features-scatter-cluster}, where there are clear clusters for each sensor ranging from all possible RUL values, at least visually. Such scatter plots suggests that the operational condition can occur at any time of the engine, healthy or not, and changes intermittently. Clustering the series with kmeans algorithm, the clusters clearly emerge. 
+
+Given that sensors operates at different ranges and, on top of that, operational conditions set new ranges for each sensor, the next logical step is to standardize each sensor to zero mean and unit variance according to the correspond operational regime. We have also removed features that are constant within at least one regime, since it would not add any new information to our model. The remaining standardized sensor charts are shown in \autoref{fig:sensors-std}, where is possible to see clear trends for some sensors over time. Sensors 1, 5, 16, 18 and 19 were removed since they were constant within at least one regime. Now it is clear that some sensors drift upwards and other downwards when the engines run towards failure. 
+
+Additionally, since regimes seem to affect operating ranges, we added custom features to cumulative count the number of cycles each operational mode was run per unit.
+
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{plots/eda_sensors_raw.png}
+    \caption{Sensor measurements raw data. Intermittent series with no clear trends emerging over time}
+    \label{fig:sensors-raw}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{plots/eda_scatters_cluster.png}
+    \caption{RUL vs. each feature of the dataset. The six operational modes are clearly separable and identified by kmeans algorithm}
+    \label{fig:rul-features-scatter-cluster}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{plots/eda_sensors_std.png}
+    \caption{Sensor measurements standardized for each regime. Now, clear trends over time emerges. Moreover, constant features within at least one regime were removed.}
+    \label{fig:sensors-std}
+\end{figure}
+
+%%%%%% ---------------------------
+
+\section{Modeling}\label{sec:modeling}
+The formal derivations and construction of each algorithm used is out of the scope of this paper. For a more in-depth discussion about the underlying statistical assumptions for each model and applications, please refer to \cite{friedman2001elements}.
+
+\subsection{Regression}
+The idea behind using regression models is to generate a continuous output at any given input. Surely, with our data, the output, i.e. the RUL, is assumed discrete and the smallest step is one unit. Nevertheless, we did not postprocess our output to integer numbers.
+
+The models selected here were: Linear Regression, Random Forest and Gradient Boosting. The first, linear regression, serve as a baseline model due its simplicity. However, one cannot underestimate the power of such simple model as we can give reliable, robust and, above all, interpretative estimations. Random Forest and Gradient Boosting are more complex models, that can also be used as classifiers as we did, that rely on ensemble of weak predictors. In addition, such models can capture non-linear relationships. They have tunable hyperparameter that are key to 
+
+\subsection{Classification}
+The classification task in RUL-related problems is usually set to classify answer whether the asset is at failure, unhealthy or operating at critical range. It is also possible to set the problem to predict if a failure will occur within a predefined horizon - and that is how we modelled and labelled our data. We encoded our target variable, RUL as:
+\begin{equation}
+	\operatorname{RUL}_\text{clf} = \begin{cases} 
+		0, & \text{if RUL $\geq$ 20} \\
+		1, & \text{if RUL $<$ 20}
+		\end{cases} \; ,
+\end{equation}
+where the subscript $clf$ denotes the classification encoding.
+
+Again, we used three models, being the simplest one, Logistic Regression, as baseline. Random Forest and Gradient Boosting, now as classifiers, were chosen for the same reasons of regression tasks.
+
+%%%% ---------------------------
+
+\section{Model Selection}\label{sec:model-selection}
+\subsection{Evaluation Metrics}
+We evaluate our predictions using two types of metrics: Mean Squared Error (MSE) for regression models; and $F_1$ score for classification.
+
+The MSE is defined as:
+\begin{equation}\label{eq:mse}
+    \operatorname{MSE} = \frac{1}{N} \sum_{i=1}^{N} (y - \hat{y})^2,
+\end{equation}
+where $y$ is the true, or target, variable, i.e. RUL, $\hat{y}$ is the predicted RUL and $N$ is the sample size, i.e. the number of predictions. Such metric is symmetric, i.e. equally weights over and underestimations and penalizes greater deviations. Therefore, the smaller, the better.
+
+The $F_1$ Score here is defined as the harmonic mean of \textit{precision} and \textit{recall}, a special case of the more general definition of $F_1$:
+\begin{align}\label{eq:f1}
+    F_1 &= \bigg( \frac{\text{precision}^{-1} + \text{recall}^{-1}}{2} \bigg) ^{-1} \nonumber\\
+    &= 2 \cdot \frac{\text{precision} \cdot \text{recall}}{\text{precision} + \text{recall}} \; ,
+\end{align}
+where \textit{precision} is the true positive over positive predictions and \textit{recall} is the true positive over the true positive elements. Therefore, the greater, the better. In addition, it is clear that the possible values range from 0 to 1.
+
+%%%%%% ---------------------------
+
+\subsection{Cross-validation}
+
+
+%%%%%% ---------------------------
+
+\subsection{Model selection}
+
+
+%%%%%% ---------------------------
+
+\section{Postprocessing}\label{sec:postprocess}
+xxx
+
+
+%%%%%% ---------------------------
+
+\section{Results}\label{sec:results}
+\subsection{Regression}
+xxx
+
+\subsection{Classification}
+xxx
+
+
+%%%%%% ---------------------------
+
+\section{Conclusion}\label{sec:conclusion}
+xxx
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\bibliographystyle{IEEEtranS}
+\bibliography{references}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
