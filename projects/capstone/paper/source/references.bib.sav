@@ -1,0 +1,115 @@
+% Encoding: UTF-8
+
+@InProceedings{saxena2008damage,
+  author       = {Saxena, Abhinav and Goebel, Kai and Simon, Don and Eklund, Neil},
+  title        = {Damage propagation modeling for aircraft engine run-to-failure simulation},
+  booktitle    = {Prognostics and Health Management, 2008. PHM 2008. International Conference on},
+  year         = {2008},
+  pages        = {1--9},
+  organization = {IEEE},
+}
+
+@Article{hu2012ensemble,
+  author    = {Hu, Chao and Youn, Byeng D and Wang, Pingfeng and Yoon, Joung Taek},
+  title     = {Ensemble of data-driven prognostic algorithms for robust prediction of remaining useful life},
+  journal   = {Reliability Engineering \& System Safety},
+  year      = {2012},
+  volume    = {103},
+  pages     = {120--135},
+  publisher = {Elsevier},
+}
+
+@Article{sarkar2011data,
+  author    = {Sarkar, Soumik and Jin, Xin and Ray, Asok},
+  title     = {Data-driven fault detection in aircraft engines with noisy sensor measurements},
+  journal   = {Journal of Engineering for Gas Turbines and Power},
+  year      = {2011},
+  volume    = {133},
+  number    = {8},
+  pages     = {081602},
+  publisher = {American Society of Mechanical Engineers},
+}
+
+@Article{mosallam2014data,
+  author = {Mosallam, Ahmed},
+  title  = {A Data-driven Approach for Remaining Useful Life Prediction of Critical Components},
+  year   = {2014},
+}
+
+@Article{frederick2007user,
+  author = {Frederick, Dean K and DeCastro, Jonathan A and Litt, Jonathan S},
+  title  = {User's guide for the commercial modular aero-propulsion system simulation (C-MAPSS)},
+  year   = {2007},
+}
+
+@Article{ramasso2014performance,
+  author  = {Ramasso, Emmanuel and Saxena, Abhinav},
+  title   = {Performance Benchmarking and Analysis of Prognostic Methods for CMAPSS Datasets.},
+  journal = {International Journal of Prognostics and Health Management},
+  year    = {2014},
+  volume  = {5},
+  number  = {2},
+  pages   = {1--15},
+}
+
+@InProceedings{heimes2008recurrent,
+  author       = {Heimes, Felix O},
+  title        = {Recurrent neural networks for remaining useful life estimation},
+  booktitle    = {Prognostics and Health Management, 2008. PHM 2008. International Conference on},
+  year         = {2008},
+  pages        = {1--6},
+  organization = {IEEE},
+}
+
+@Article{gugulothu2017predicting,
+  author  = {Gugulothu, Narendhar and TV, Vishnu and Malhotra, Pankaj and Vig, Lovekesh and Agarwal, Puneet and Shroff, Gautam},
+  title   = {Predicting Remaining Useful Life using Time Series Embeddings based on Recurrent Neural Networks},
+  journal = {arXiv preprint arXiv:1709.01073},
+  year    = {2017},
+}
+
+@InProceedings{ramasso2014review,
+  author    = {Ramasso, Emmanuel and Saxena, Abhinav},
+  title     = {Review and analysis of algorithmic approaches developed for prognostics on CMAPSS dataset},
+  booktitle = {Annual Conference of the Prognostics and Health Management Society 2014.},
+  year      = {2014},
+}
+
+@InProceedings{wang2008similarity,
+  author       = {Wang, Tianyi and Yu, Jianbo and Siegel, David and Lee, Jay},
+  title        = {A similarity-based prognostics approach for remaining useful life estimation of engineered systems},
+  booktitle    = {Prognostics and Health Management, 2008. PHM 2008. International Conference on},
+  year         = {2008},
+  pages        = {1--6},
+  organization = {IEEE},
+}
+
+@Article{kalman1960new,
+  author    = {Kalman, Rudolph Emil},
+  title     = {A new approach to linear filtering and prediction problems},
+  journal   = {Journal of basic Engineering},
+  year      = {1960},
+  volume    = {82},
+  number    = {1},
+  pages     = {35--45},
+  publisher = {American Society of Mechanical Engineers},
+}
+
+@TechReport{h2oai,
+  author      = {Hank Roark},
+  title       = {H2O Machine Learning and Kalman Filters for Machine Learning},
+  institution = {H2O.ai},
+  year        = {2016},
+  month       = jan,
+}
+
+@Book{friedman2001elements,
+  title     = {The elements of statistical learning},
+  publisher = {Springer series in statistics New York, NY, USA:},
+  year      = {2001},
+  author    = {Friedman, Jerome and Hastie, Trevor and Tibshirani, Robert},
+  volume    = {1},
+  number    = {10},
+}
+
+@Comment{jabref-meta: databaseType:bibtex;}

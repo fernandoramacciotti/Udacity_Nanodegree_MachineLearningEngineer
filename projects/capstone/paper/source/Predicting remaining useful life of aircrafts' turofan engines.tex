@@ -77,7 +77,7 @@ fernandoramacciotti@gmail.com% <-this % stops a space
 \begin{abstract}
 
 \textbf{
-This electronic document is a template. The various components of your paper [title, text, heads, etc.] are already defined on the style sheet, as illustrated by the portions given in this document.
+Predicitve maintenance through predicting remaining useful life (RUL) of an asset is desired for every business. Data-driven approaches can yield good results, but such data is costly to collect, once companies would lose money to run their machines to failure. NASA has simulated several run-to-failure conditions for a fleet of turbofan engines and such dataset is widely used as a benchmark for developing predictive asset maintenance algorithms. The dataset has 249 training units and 248 testing units with 21 sensors measurements and 3 operational settings that yields six operational regimes. All training units were simulated run-to-failure, while the testing series are cut off sometime before failure. We have used regression and classification machine learning models for estimating RUL and predicting a failure upon the next 20 cycles, respectively. Preprocessing was key to untrap clear trends over time and remove useless features. Moreover, we postprocess regression output with Kalman filter to remove noisy predictions and incorporate domain knowledge. Our models performed relatively well on training set but up to 3 times worse on test. The main reason for such spread is due to the fact that our models performed well when the engines are close to failure and sensors operates at a fairly constant range within each operational mode while the engine is healthy and only deviates when unhealthy. This adds up a degree of complexity, since for healthy engines most of sensor variation is due to noise.
 }
 \end{abstract}
 
@@ -89,7 +89,7 @@ In this study, we used data-driven methods to evaluate RUL predictions, such as 
 
 In order to have a good data-driven model, one must have quality data - and this is the bottleneck of such approach. Good data for predictive maintenance means that we have enough run-to-failure data from multiple assets so that our model can extract patterns. However, such data is costly to collect, once companies would lose money to run their machines to failure, even though they would be able to build a model to prevent it in the future. Luckily, NASA made available a simulated run-to-failure dataset for a fleet of turbofan engines \cite{frederick2007user, saxena2008damage}, originally used in Prognostics and Health Management competition of 2008 (PHM'08). Since then, the dataset have been extensively used for benchmarking data-driven models that predict RUL. A thorough review can be found in \cite{ramasso2014review, ramasso2014performance}. Other approaches can be found in \cite{gugulothu2017predicting, hu2012ensemble, mosallam2014data, sarkar2011data}, including winning models from the very same competition \cite{heimes2008recurrent, wang2008similarity}.
 
-There are four datasets, that differ on operational conditions and fault modes. In this study we used the most complex one: 248 train and 249 units (or engines), with six different operational conditions and two fault modes, alongside with noisy measurements. Each sample is considered a cycle and we have the sensor measurements. All training units were simulated-to-failure, while the test series are cut off sometime before failure. Our target function, therefore, is to predict the implicit RUL. We assume that after each cycle the RUL is reduced by one unit - therefore if a train unit has 200 samples, then the last point has RUL zero and the first sample a RUL of 200.
+There are four datasets, that differ on operational conditions and fault modes. In this study we used the most complex one: 249 train and 248 units (or engines), with six different operational conditions and two fault modes, alongside with noisy measurements. Each sample is considered a cycle and we have the sensor measurements. All training units were simulated-to-failure, while the test series are cut off sometime before failure. Our target function, therefore, is to predict the implicit RUL. We assume that after each cycle the RUL is reduced by one unit - therefore if a train unit has 200 samples, then the last point has RUL zero and the first sample a RUL of 200.
 
 The key to a good model here is to preprocess the data. A raw plot of sensor data shows no clear trends over time and intermittent value shifts. A careful deep-dive revealed that such jumps were due to changes in operational condition, i.e. for each operational condition the sensors operates at different levels. We have, therefore, clustered the series into 6 cluster using k-means algorithm and standardized the series to zero mean and unit variance per cluster - and removed features that were constant within at least one cluster. It was interesting to notice that some sensors drift upwards when the engine fails, others downwards, while others do not show clear patterns. In addition, we have created features to cumulative count how many cycles each operational condition was set at any given time.
 
@@ -237,33 +237,110 @@ where \textit{precision} is the true positive over positive predictions and \tex
 %%%%%% ---------------------------
 
 \subsection{Cross-validation}
+Cross-validation is widely used to evaluate machine learning algorithms performance. The main reason is to prevent overfitting, i.e. when the model cannot generalize predictions well to new unseen data.
+
+The usual set up is to divide training data into folds, train the model in some and test on those left out and evaluate predictions using a metric. Then the process is repeated exhaustively to all possible combinations training and testing (or validation) folds. The mean score of all steps is usually used to compare algorithms. In this paper, we splited our data into 5 folds, each with approximatedly 50 engine units. We then left out one fold for validation and train the model on the other four.
 
 
 %%%%%% ---------------------------
 
 \subsection{Model selection}
-
+Each regression and classification model selection is splitted into two parts. First, we cross-validate all three models and pick the best mean cross-validation score with the respective metric. Then, for the chosen model we fine tune its hyperparameters with grid search. Then, the best hyperparameter combination is is used to calibrate the model and then it is ready to be tested on the test set.
 
 %%%%%% ---------------------------
 
 \section{Postprocessing}\label{sec:postprocess}
-xxx
+For the chosen regression model, we post processed the predictions with Kalman filter \cite{h2oai}. It is not the scope of this paper to prove the underlying theory behind the filtering method - the reader can refer to \cite{kalman1960new}. 
 
+The main motivation to use Kalman filter is to remove noisy predictions and to try to enforce that the next RUL value must be less than the previous, i.e. the RUL decreases by one unit after every cycle. It is possible to do that if a state space model of the system, where we can add prior knowledge (RUL decreases by 1 unit) and estimate the true state of the system given new information (the observations). In our case, our observations are our predictions.
+
+The state space equations are give by
+\begin{align}
+	y_{t} &= \mathbf{G}\mathbf{x} + \nu_t \quad \text{where $\nu \sim N(0, \sigma^2)$} \\
+	\mathbf{x}_{t+1} &= \mathbf{A}\mathbf{x}_{t+1}
+\end{align}
+where $y_t$ is the observation at time $t$ that is given by the observation model matrix $\mathbf{G}$ and it is noisy, by definition, through $\nu$. The state transition is given by the transition matrix $\mathbf{A}$ and it is, also, usually noisy, but here we assumed to be deterministic.
+
+To keep it simple, we modelled with states $\mathbf{x} = [\operatorname{RUL}, -1]'$, transition matrix $\bigl[ \begin{smallmatrix}1&-1 \\ 0&1\end{smallmatrix} \bigr]$, and the variance $\sigma^2$ of the noise $\eta$ is given by the model $MSE$ The observation model is defined as $\mathbf{G} = [1, 0]`$. Therefore, with a little algebra, one can confirm that the $\operatorname{RUL}_{t+1} = \operatorname{RUL}_t{ - 1}$ and the observations $y_t$, i.e. our predictions, are given by true $RUL_t$ plus some noise whose variance is equal to the model error.
 
 %%%%%% ---------------------------
 
 \section{Results}\label{sec:results}
 \subsection{Regression}
-xxx
+The training cross validation mean scores are shown in \autoref{tab:reg-train-scores}. Both complex models beat linear regression and the best performer was Gradient Boosting. The Random Forest was trained with 100 trees, no limit for max depth and minimum samples for spliting was 2. The Gradient Boosting model was trained with 100 estimators, learning rate of 0.1 and max depth of 3.
+
+We proceeded with hyperparameters tuning for the best performer, Gradient Boosting, and the final model was set up with 100 estimators, learning rate of 0.03 and max depth of 5. The mean CV MSE score improved only 1\%, down to 2,714.60. After Kalman post processing, the results were improved by 20\%, down to MSE of 2,162.77. In \autoref{fig:test-preds-reg} it is possible to see how Kalman filters treated the signal for 4 random selected testing units.
+
+The test scores were almost 2 times worse than training: 4,781.52 without filtering and 4,699.35 after filtering. The linear regression test score was 5,467.76. Such decreaset can be due to the fact that most predictions are more accurate when the RUL is smaller, i.e., the engine is approaching to failure. This can be explained by the fact that health engines oeprates always at a constant health range for each operating mode, meaning that sensor data will only have variation due to nois. When approaching to failure, variation is caused by other factors and the model, then, captures it. It is almost as we would try to predict a decreasing target function with a constant input. In \autoref{fig:rul-actual-pred} we can see such relationship between actual and predicted RUL and in \autoref{fig:test-rul-dist} we can see that testing RUL are widely distributed - i.e. there are as many healthy and unhealthy engines.
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{l|c}
+        \hline 
+        \hline \\[-1.8ex] 
+        Model & Mean CV MSE \\
+        \hline \\[-1.8ex] 
+         Linear Regression & 3,318.97 \\
+         Random Forest & 2,900.40 \\
+         Gradient Boosting & 2,744.74 \\
+         \hline
+         \hline
+    \end{tabular}
+    \caption{Regression training scores}
+    \label{tab:reg-train-scores}
+\end{table}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{plots/reg_test_units_pred.png}
+    \caption{Random test units actual and predicted RUL, raw and postprocessed with Kalman filter}
+    \label{fig:test-preds-reg}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{plots/reg_rul_pred_true.png}
+    \caption{Relationship between actual and predicted training RUL. There is a convergence when RUL approaches zero.}
+    \label{fig:rul-actual-pred}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{plots/hist_rul_train_test.png}
+    \caption{Test RUL are distributed accross a wide range}
+    \label{fig:test-rul-dist}
+\end{figure}
 
 \subsection{Classification}
-xxx
+The training cross validation mean scores are shown in \autoref{tab:clf-train-scores}. Both complex models beat logistic regression and the best performer was Random Forest. The Random Forest was trained with 100 trees, no limit for max depth and minimum samples for spliting was 2. The Gradient Boosting model was trained with 100 estimators, learning rate of 0.1 and max depth of 3.
+
+The test scores were almost 3 times worse than training: 0.52. Intereting the baseline model, logistic regression, had a better test score, 0.55. Again, noisy data and testing units that were not close to failure - and in this case below RUL of 20 - might affected the predictions and degraded performance.
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{l|c}
+        \hline 
+        \hline \\[-1.8ex] 
+        Model & Mean CV $F_1$ \\
+        \hline \\[-1.8ex] 
+         Logistic Regression & .80 \\
+         Random Forest & .84 \\
+         Gradient Boosting & .83 \\
+         \hline
+         \hline
+    \end{tabular}
+    \caption{Classification training scores}
+    \label{tab:clf-train-scores}
+\end{table}
+
+We proceeded with hyperparameters tuning for the best performer, Random Forest, and the final model was set up with 100 estimators and no limit for max depth of 10. The mean CV $F_1$ score decrease slightly to 0.83, but limiting the max depth is prefered in order to avoid overfitting. 
 
 
 %%%%%% ---------------------------
 
 \section{Conclusion}\label{sec:conclusion}
-xxx
+In short, our models performed well on training set, but, even though we have used cross-validation folds to avoid overfitting, it seems that they could not generalize well, since the test results were much worse. Perhaps a more thorough preprocessing improves model performance, with a more careful signal processing to remove noise.
+
+A different target function, i.e. RUL, handling might help fix the fact that for healthy units the sensor data does not vary much except from noisy measurements. Therefore, an alternative approach is to create a healthy index and from it postprocess predictions with Kalman filtering taking into account transition matrix and the fact that RUL always decrease by one unit after each cycle.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
