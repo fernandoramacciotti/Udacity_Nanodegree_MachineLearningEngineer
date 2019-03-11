@@ -59,3 +59,6 @@ target/
 
 # checkpoints
 .ipynb_checkpoints
+
+# zip
+*.zip
